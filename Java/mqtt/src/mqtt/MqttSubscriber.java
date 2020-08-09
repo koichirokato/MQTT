@@ -19,7 +19,11 @@ public class MqttSubscriber  implements MqttCallback {
 	String broker = "";
 	String topic  = "";
 	
-	//コンストラクタ
+	/**
+	 * コンストラクタ
+	 * @param brokerHostName
+	 * @param subscribeTopic
+	 */
 	public MqttSubscriber(String brokerHostName,String subscribeTopic) {
 		broker = "tcp://"+brokerHostName+":1883";
 		topic  = subscribeTopic;
@@ -30,21 +34,12 @@ public class MqttSubscriber  implements MqttCallback {
      */
     @Override
     public void connectionLost(Throwable cause) {
-        System.out.println("Connection lost!");
-        //再接続がしたかったらここに処理を書く
+        System.out.println("Connection lost");
         System.exit(1);
     }
 
     /**
-     * メッセージの送信が完了したときに呼ばれるCallback.
-     */
-    @Override
-    public void deliveryComplete(IMqttDeliveryToken token) {
-        //Subscribe側からは呼び出されない？
-    }
-
-    /**
-     * メッセージを受信したときに呼ばれる。
+     * メッセージを受信したときに呼び出される．
      */
     @Override
     public void messageArrived(String topic, MqttMessage message) throws MqttException {
@@ -56,6 +51,10 @@ public class MqttSubscriber  implements MqttCallback {
         MqttThread.recieveData = new String(message.getPayload());
     }
     
+    /**
+     * Subscribeしたか否かを判断する．
+     * @return isNewフラグ
+     */
     public boolean isNew() {
     	boolean flag = false;
     	if(recieveTime==lastTime) flag = false;
@@ -110,4 +109,13 @@ public class MqttSubscriber  implements MqttCallback {
         client.close();
         System.out.println("Disconnected");
     }
+    
+    /**
+     * MqttCallbackに必要，subscribeからは呼び出されなさそう．
+     */
+	@Override
+	public void deliveryComplete(IMqttDeliveryToken arg0) {
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
 }

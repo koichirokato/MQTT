@@ -10,16 +10,23 @@ public class MqttPublisher {
 	String broker = "";
 	String topic  = "";
 	
-	//コンストラクタ
+	/**
+	 * コンストラクタ 
+	 * @param brokerHostName
+	 * @param publishTopic
+	 */
 	public MqttPublisher(String brokerHostName,String publishTopic) {
 		broker = "tcp://"+brokerHostName+":1883";
 		topic  = publishTopic;
 	}
+
+	/**
+	 * 引数をpublishする．
+	 * @param publishMessage
+	 */
 	public void publish(String publishMessage) {
         final int qos             = 2;
         final String clientId     = "Publisher";
-        //Publishするメッセージ内容
-
         try {
             MqttClient mqttClient = new MqttClient(broker, clientId, new MemoryPersistence());
             MqttConnectOptions connOpts = new MqttConnectOptions();
